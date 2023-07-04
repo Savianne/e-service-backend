@@ -55,7 +55,7 @@ function addResidentRecordTransaction(residentRecord, adminUID) {
                     connection.commit()
                         .then(() => {
                         connection.release();
-                        resolve({ querySuccess: true });
+                        resolve({ querySuccess: true, residentUID: residentUID });
                     })
                         .catch((commitError) => {
                         connection.release();
@@ -66,7 +66,6 @@ function addResidentRecordTransaction(residentRecord, adminUID) {
                     });
                 }))
                     .catch((beginTransactionError) => {
-                    console.log("catched here");
                     connection.rollback();
                     connection.release();
                     reject({

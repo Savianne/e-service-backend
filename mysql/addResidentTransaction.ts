@@ -3,6 +3,10 @@ import { OkPacket } from "mysql2";
 import { generateResidentssUID } from "../Helpers/generateUID";
 import { IQueryPromise } from "./IQueryPromise";
 
+interface IQueryPromiseWithResidentId extends IQueryPromise {
+    residentUID: string
+}
+
 type TAddress = {
     region: string,
     province: string,
@@ -34,7 +38,7 @@ type TResidentRecord = {
     senior_citizen: boolean
 }
 
-async function addResidentRecordTransaction(residentRecord: TResidentRecord, adminUID: string): Promise<{ querySuccess: boolean }> {
+async function addResidentRecordTransaction(residentRecord: TResidentRecord, adminUID: string): Promise<IQueryPromiseWithResidentId> {
     const personalInfo = residentRecord.personalInformation;
     const contactInformation = residentRecord.contactInformation;
     const homeContactInfo = residentRecord.homeContactInformation;
@@ -53,7 +57,7 @@ async function addResidentRecordTransaction(residentRecord: TResidentRecord, adm
     const addResidentQuery = "INSERT INTO residents (resident_uid, personal_information, personal_contact_information, home_contact_information, created_by) VALUES (?, ?, ?, ?, ?)";
     const addToSeniorCitizenOrganization = "INSERT INTO senior_citizen_members (resident_uid) VALUE(?)";
 
-    return new Promise<IQueryPromise>((resolve, reject) => {
+    return new Promise<IQueryPromiseWithResidentId>((resolve, reject) => {
         promisePool.getConnection()
         .then(connection => {
             connection.beginTransaction()
@@ -87,7 +91,7 @@ async function addResidentRecordTransaction(residentRecord: TResidentRecord, adm
                 connection.commit()
                 .then(() => {
                     connection.release();
-                    resolve({ querySuccess: true });
+                    resolve({ querySuccess: true, residentUID: residentUID });
                 })
                 .catch((commitError) => {
                     connection.release()
@@ -98,7 +102,6 @@ async function addResidentRecordTransaction(residentRecord: TResidentRecord, adm
                 });
             })
             .catch((beginTransactionError) => {
-                console.log("catched here")
                 connection.rollback();
                 connection.release()
                 reject({

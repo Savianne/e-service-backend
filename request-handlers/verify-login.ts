@@ -1,9 +1,12 @@
 import { Request, Response } from "express";
+import dotenv from "dotenv";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 
 import getUserAccountInfoByEmail from "../mysql/getUserAccountInfoByEmail";
 import addRefreshToken from "../mysql/addRefreshToken";
+
+dotenv.config();
 
 const verifyLogin = async (req: Request, res: Response) => {
     const email = req.body.email;

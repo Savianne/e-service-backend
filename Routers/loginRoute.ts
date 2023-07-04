@@ -33,15 +33,15 @@ loginRoute.get("/", (req, res) => {
 });
 
 // loginRoute.get("/create-super-admin", async (req, res) => {
-//     const hashedPassword = await bcrypt.hash("savianne", 10);
+//     const hashedPassword = await bcrypt.hash("sandiatcentro", 10);
 //     const accountUID = generateUID();
 //     const admin: IAdmin = {
-//         name: "Mark Nino Baylon",
+//         name: "Danielle Macabitas",
 //         account_uid: accountUID, 
 //         password: hashedPassword, 
-//         email: "www.ninzxky@gmail.com", 
+//         email: "denramosmac@gmail.com", 
 //         main_admin: true, 
-//         avatar: "mark.png"
+//         avatar: ""
 //     };
 
 //     try {

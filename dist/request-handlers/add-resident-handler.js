@@ -13,13 +13,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const addResidentTransaction_1 = __importDefault(require("../mysql/addResidentTransaction"));
+const __1 = require("..");
 const handleAddResidentRecord = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
     const adminRequest = req;
     const residentRecord = req.body.residentRecord;
     (0, addResidentTransaction_1.default)(residentRecord, (_a = adminRequest.user) === null || _a === void 0 ? void 0 : _a.UID)
         .then(q => {
-        res.status(200).json({ success: true });
+        res.status(200).json({ success: true, data: q.residentUID });
+        __1.io.emit('ADDED_NEW_RESIDENT');
     })
         .catch(err => {
         console.log(err);
