@@ -57,7 +57,7 @@ apiRoute.post('/generate-pdf', generatePDFEnpoint);
 
 apiRoute.post('/get-doc-request', handleGetResidentDocRequest);
 
-apiRoute.patch(`/update-request-status/:reqID/:statusCode`, handleUpdateDocReqStatus);
+apiRoute.patch(`/update-request-status/:reqID/:statusCode/:from`, handleUpdateDocReqStatus);
 
 apiRoute.patch('/update-doc-req-as-created/:residentUID/:reqID', handleOnCreateStatusUpdate);
 

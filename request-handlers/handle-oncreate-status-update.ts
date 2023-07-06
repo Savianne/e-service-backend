@@ -5,6 +5,7 @@ import dotenv from "dotenv";
 import jwt from "jsonwebtoken";
 import pool from '../mysql/pool';
 import getResidentRecord from '../mysql/getResidentRecord';
+import { io } from '..';
 
 dotenv.config();
 
@@ -74,12 +75,12 @@ const handleOnCreateStatusUpdate = (req: Request, res: Response) => {
                 purpose: requestDoc.purpose
             }, access_token_secret, {expiresIn: '1h'});
 
-            const docDownload = res.json({success: true, data: `http://localhost:3005/utils/doc-download/indigency/${token}`});
+            const docDownload = res.json({success: true, data: `http://localhost:3005/utils/doc-download/${token}`});
 
             connection.commit()
             .then(() => {
                 connection.release();
-
+                io.emit(`DOC_REQ_STATUS_UPDATE_FOR_${residentUID}`)
                 res.json({success: true, data: docDownload})
             })
             .catch((commitError) => {

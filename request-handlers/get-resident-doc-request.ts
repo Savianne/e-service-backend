@@ -8,7 +8,8 @@ type TRequestDoc = {
     id: 1,
     residentUID: string,
     fullName: string,
-    picture: string | null
+    picture: string | null,
+    date: string
 }
 
 const handleGetResidentDocRequest = async (req: Request, res: Response) => {
@@ -25,7 +26,8 @@ const handleGetResidentDocRequest = async (req: Request, res: Response) => {
                 documentType: i.documentType,
                 id: i.id,
                 purpose: i.purpose,
-                status: i.status
+                status: i.status,
+                date: i.date
             }))});
         } else {
             res.sendStatus(404);

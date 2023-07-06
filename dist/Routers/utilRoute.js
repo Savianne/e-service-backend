@@ -48,6 +48,7 @@ utilityRoute.get("/doc-download/:reqInfo", (req, res) => __awaiter(void 0, void 
                 res.setHeader('Content-Type', 'application/octet-stream');
                 res.setHeader('Content-Disposition', 'attachment; filename="downloaded.pdf"');
                 // Create a stream and pipe the PDF data to it
+                doc.pipe(res);
                 doc.end();
             }
             else

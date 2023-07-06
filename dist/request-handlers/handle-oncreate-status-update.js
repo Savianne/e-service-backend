@@ -16,6 +16,7 @@ const dotenv_1 = __importDefault(require("dotenv"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const pool_1 = __importDefault(require("../mysql/pool"));
 const getResidentRecord_1 = __importDefault(require("../mysql/getResidentRecord"));
+const __1 = require("..");
 dotenv_1.default.config();
 const handleOnCreateStatusUpdate = (req, res) => {
     const residentUID = req.params.residentUID;
@@ -63,10 +64,11 @@ const handleOnCreateStatusUpdate = (req, res) => {
                 documentType: requestDoc.documentType,
                 purpose: requestDoc.purpose
             }, access_token_secret, { expiresIn: '1h' });
-            const docDownload = res.json({ success: true, data: `http://localhost:3005/utils/doc-download/indigency/${token}` });
+            const docDownload = res.json({ success: true, data: `http://localhost:3005/utils/doc-download/${token}` });
             connection.commit()
                 .then(() => {
                 connection.release();
+                __1.io.emit(`DOC_REQ_STATUS_UPDATE_FOR_${residentUID}`);
                 res.json({ success: true, data: docDownload });
             })
                 .catch((commitError) => {

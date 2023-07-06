@@ -5,6 +5,7 @@ import nodemailer from 'nodemailer';
 import dotenv from "dotenv";
 import jwt from "jsonwebtoken";
 import pool from '../mysql/pool';
+import { io } from '../index';
 
 dotenv.config();
 
@@ -109,6 +110,8 @@ residentRoute.post('/make-request', (req, res) => {
             if(insertRequest) {
                 connection.commit();
                 connection.release();
+                io.emit("NEW_DOC_REQUEST");
+                io.emit("REFRESH_REQUEST_LIST");
                 res.json({success: true, data: insertRequest});
             } else {
                 connection.rollback();
@@ -164,8 +167,8 @@ residentRoute.delete(`/delete-request/:reqID`, async (req, res) => {
 
     try {
         const deleteQ = (await poolCon.query(`DELETE FROM resident_doc_request AS r WHERE r.id = ?`, [reqID]) as OkPacket[])[0];
-        console.log(deleteQ.affectedRows)
         if(deleteQ.affectedRows > 0) {
+            io.emit("REFRESH_REQUEST_LIST")
             res.send({success: true});
         } else {
             res.sendStatus(500);
@@ -187,6 +190,7 @@ residentRoute.delete(`/update-request-status/:reqID/:statusCode`, async (req, re
         const updateQ = (await poolCon.query(`UPDATE resident_doc_request SET status = ? WHERE id = ?`, [newStatus, reqID]) as OkPacket[])[0];
         console.log(updateQ.affectedRows)
         if(updateQ.affectedRows > 0) {
+            io.emit("REFRESH_REQUEST_LIST")
             res.send({success: true});
         } else {
             res.sendStatus(500);

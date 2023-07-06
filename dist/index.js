@@ -14,6 +14,9 @@ const serve_static_1 = __importDefault(require("serve-static"));
 const config_1 = __importDefault(require("./config"));
 const socket_io_1 = require("socket.io");
 const http_1 = __importDefault(require("http"));
+const https_1 = __importDefault(require("https"));
+const fs_1 = __importDefault(require("fs"));
+const axios_1 = __importDefault(require("axios"));
 //Routers
 const loginRoute_1 = __importDefault(require("./Routers/loginRoute"));
 const adminRoute_1 = __importDefault(require("./Routers/adminRoute"));
@@ -29,7 +32,7 @@ const app = (0, express_1.default)();
 const server = http_1.default.createServer(app);
 exports.io = new socket_io_1.Server(server, {
     cors: {
-        origin: 'http://localhost:3000',
+        origin: ['http://localhost:3000', 'http://localhost:3005'],
         methods: ['GET', 'POST'] // Specify the allowed HTTP methods
     }
 });
@@ -60,6 +63,58 @@ exports.io.on('connection', (socket) => {
         // Handle the message and emit it back to clients if needed
     });
 });
+//SSL Certificate
+const cert = fs_1.default.readFileSync('./SSL_cert/server.crt');
+const key = fs_1.default.readFileSync('./SSL_Cert/server.key');
+//Using express
+const httpsapp = (0, express_1.default)();
+httpsapp.use((0, cors_1.default)());
+httpsapp.use(body_parser_1.default.json());
+httpsapp.get('/get-semaphore-credit-bal', (req, res) => {
+    const url = `https://api.semaphore.co/api/v4/account?apikey=${process.env.SEMAPHORE_APIKEY}`; // Set the target URL
+    axios_1.default.get(url)
+        .then(response => {
+        // Handle the response from the external API
+        res.json({ success: true, data: response.data });
+    })
+        .catch(error => {
+        // Handle any errors that occurred during the request
+        console.error(error);
+        res.status(500).send('Error occurred while making the request');
+    });
+});
+httpsapp.post('/send-sms', (req, res) => {
+    const smsData = req.body;
+    axios_1.default.post('https://api.semaphore.co/api/v4/messages', {
+        apikey: process.env.SEMAPHORE_APIKEY,
+        number: smsData.cpNumber,
+        message: smsData.message
+    })
+        .then(response => {
+        // console.log(response)
+        // console.log(response.data);
+        res.json({ success: true, data: response.data });
+    })
+        .catch(err => {
+        console.log(err);
+        res.sendStatus(500);
+    });
+});
+httpsapp.post('/get-inbox', (req, res) => {
+    axios_1.default.get('https://api.semaphore.co/api/v4/messages', {
+        params: {
+            apikey: process.env.SEMAPHORE_APIKEY,
+        },
+    }).then(response => {
+        res.json({ success: true, data: response.data });
+    })
+        .catch(err => {
+        console.log(err);
+        res.sendStatus(500);
+    });
+});
+const server_w_ssl = https_1.default.createServer({ key: key, cert: cert }, httpsapp);
+server_w_ssl.listen(3002, () => console.log(`Server is Up and running at port: 3002`));
 server.listen(3008, () => {
     console.log(`Server listening on port 3006`);
 });

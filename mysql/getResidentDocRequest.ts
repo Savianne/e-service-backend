@@ -10,6 +10,7 @@ async function getResidentDocumentRequest() {
         SELECT dt.document_type AS documentType, rdr.purpose, rs.status, rdr.id,
         r.resident_uid AS residentUID,
         dp.picture,
+        rdr.date_created AS date,
         CONCAT(COALESCE(fn.first_name, ''), ' ', LEFT(fn.middle_name, 1), '.', ' ', fn.surname, ' ', COALESCE(fn.ext_name, '')) AS fullName
         FROM resident_doc_request AS rdr
         JOIN request_statuses AS rs ON rdr.status = rs.id

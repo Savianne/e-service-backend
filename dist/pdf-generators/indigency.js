@@ -95,7 +95,7 @@ function generateIndigency(request) {
         .moveTo(72, 630)
         .lineTo(72 + 200, 630)
         .stroke();
-    doc.fontSize(11)
+    doc.fontSize(10)
         .font('Helvetica-Bold')
         .text(`${request.name.toUpperCase()}`, 72, 615, { width: 200, align: 'center' });
     doc.fontSize(9)
@@ -108,7 +108,7 @@ function generateIndigency(request) {
         .moveTo((doc.page.width - 72) - 200, 680)
         .lineTo(doc.page.width - 72, 680)
         .stroke();
-    doc.fontSize(12)
+    doc.fontSize(10)
         .font('Helvetica-Bold')
         .text(`${request.barangayChairperson.toUpperCase()}`, (doc.page.width - 72) - 200, 665, { width: 200, align: 'center' });
     doc.fontSize(9)

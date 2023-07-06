@@ -41,6 +41,6 @@ apiRoute.post('/get-sk-terms', get_sk_terms_handler_1.default);
 apiRoute.post('/get-senior-citizens', get_senio_citizens_handler_1.default);
 apiRoute.post('/generate-pdf', generate_pdf_endpoit_1.default);
 apiRoute.post('/get-doc-request', get_resident_doc_request_1.default);
-apiRoute.patch(`/update-request-status/:reqID/:statusCode`, update_doc_request_status_1.default);
+apiRoute.patch(`/update-request-status/:reqID/:statusCode/:from`, update_doc_request_status_1.default);
 apiRoute.patch('/update-doc-req-as-created/:residentUID/:reqID', handle_oncreate_status_update_1.default);
 exports.default = apiRoute;

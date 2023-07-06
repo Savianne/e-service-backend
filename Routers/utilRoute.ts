@@ -58,6 +58,7 @@ utilityRoute.get("/doc-download/:reqInfo", async (req, res) => {
                 res.setHeader('Content-Disposition', 'attachment; filename="downloaded.pdf"');
     
                 // Create a stream and pipe the PDF data to it
+                doc.pipe(res);
                 
                 doc.end();
 

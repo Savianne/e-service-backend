@@ -27,7 +27,8 @@ const handleGetResidentDocRequest = (req, res) => __awaiter(void 0, void 0, void
                     documentType: i.documentType,
                     id: i.id,
                     purpose: i.purpose,
-                    status: i.status
+                    status: i.status,
+                    date: i.date
                 })) });
         }
         else {

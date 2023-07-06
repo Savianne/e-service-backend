@@ -17,6 +17,7 @@ const nodemailer_1 = __importDefault(require("nodemailer"));
 const dotenv_1 = __importDefault(require("dotenv"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const pool_1 = __importDefault(require("../mysql/pool"));
+const index_1 = require("../index");
 dotenv_1.default.config();
 const residentRoute = express_1.default.Router();
 residentRoute.post('/logout', (req, res) => {
@@ -91,6 +92,8 @@ residentRoute.post('/make-request', (req, res) => {
             if (insertRequest) {
                 connection.commit();
                 connection.release();
+                index_1.io.emit("NEW_DOC_REQUEST");
+                index_1.io.emit("REFRESH_REQUEST_LIST");
                 res.json({ success: true, data: insertRequest });
             }
             else {
@@ -136,8 +139,8 @@ residentRoute.delete(`/delete-request/:reqID`, (req, res) => __awaiter(void 0, v
     const poolCon = pool_1.default.promise();
     try {
         const deleteQ = (yield poolCon.query(`DELETE FROM resident_doc_request AS r WHERE r.id = ?`, [reqID]))[0];
-        console.log(deleteQ.affectedRows);
         if (deleteQ.affectedRows > 0) {
+            index_1.io.emit("REFRESH_REQUEST_LIST");
             res.send({ success: true });
         }
         else {
@@ -157,6 +160,7 @@ residentRoute.delete(`/update-request-status/:reqID/:statusCode`, (req, res) => 
         const updateQ = (yield poolCon.query(`UPDATE resident_doc_request SET status = ? WHERE id = ?`, [newStatus, reqID]))[0];
         console.log(updateQ.affectedRows);
         if (updateQ.affectedRows > 0) {
+            index_1.io.emit("REFRESH_REQUEST_LIST");
             res.send({ success: true });
         }
         else {
