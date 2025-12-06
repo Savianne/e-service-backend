@@ -64,12 +64,12 @@ const handleOnCreateStatusUpdate = (req, res) => {
                 documentType: requestDoc.documentType,
                 purpose: requestDoc.purpose
             }, access_token_secret, { expiresIn: '1h' });
-            const docDownload = res.json({ success: true, data: `http://localhost:3005/utils/doc-download/${token}` });
+            // const docDownload = res.json({success: true, data: `http://localhost:3005/utils/doc-download/${token}`});
             connection.commit()
                 .then(() => {
                 connection.release();
                 __1.io.emit(`DOC_REQ_STATUS_UPDATE_FOR_${residentUID}`);
-                res.json({ success: true, data: docDownload });
+                res.json({ success: true, data: `http://localhost:3005/utils/doc-download/${token}` });
             })
                 .catch((commitError) => {
                 connection.release();

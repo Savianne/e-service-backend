@@ -12,7 +12,7 @@ const pool = mysql2_1.default.createPool({
     user: process.env.DB_USER,
     password: process.env.DB_PSWRD,
     port: 3306,
-    database: 'sandiat_centro_information_system',
+    database: 'eservices',
     waitForConnections: true,
     connectionLimit: 5,
     //   maxIdle: 10, // max idle connections, the default value is the same as `connectionLimit`

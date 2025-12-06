@@ -77,6 +77,7 @@ io.on('connection', (socket: Socket) => {
 //SSL Certificate
 const cert = fs.readFileSync('./SSL_cert/server.crt');
 const key = fs.readFileSync('./SSL_Cert/server.key');
+const newcert = fs.readFileSync('./SSL_cert/new-cert/sslkey.pfx');
 
 //Using express
 const httpsapp = express();

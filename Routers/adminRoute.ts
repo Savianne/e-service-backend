@@ -20,12 +20,6 @@ adminRoute.get("/", (req, res) => {
     userReq.user? res.sendFile(path.join(__dirname, '../../Views/admin.html')) : res.redirect("/login")
 });
 
-adminRoute.get('*', (req, res) => {
-    const userReq = req as IUserRequest;
-
-    userReq.user? res.sendFile(path.join(__dirname, '../../Views/admin.html')) : res.redirect("/login")
-});
-
 adminRoute.post('/get-account-info', (req, res) => {
     const request = req as IUserRequest;
     res.json({
@@ -103,5 +97,11 @@ adminRoute.delete('/change-pass', async (req, res) => {
 
 
 adminRoute.use("/api", apiRoute)
+
+adminRoute.get('*', (req, res) => {
+    const userReq = req as IUserRequest;
+
+    userReq.user? res.sendFile(path.join(__dirname, '../../Views/admin.html')) : res.redirect("/login")
+});
 
 export default adminRoute;

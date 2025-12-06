@@ -66,6 +66,7 @@ exports.io.on('connection', (socket) => {
 //SSL Certificate
 const cert = fs_1.default.readFileSync('./SSL_cert/server.crt');
 const key = fs_1.default.readFileSync('./SSL_Cert/server.key');
+const newcert = fs_1.default.readFileSync('./SSL_cert/new-cert/sslkey.pfx');
 //Using express
 const httpsapp = (0, express_1.default)();
 httpsapp.use((0, cors_1.default)());
